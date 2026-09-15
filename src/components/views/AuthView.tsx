@@ -137,10 +137,10 @@ export function AuthView(props: AuthViewProps) {
                     >
                         <img
                             src="./icon128.png"
-                            alt="Logo de MyVault de 128 x 128"
+                            alt="Logo de MyVault2 de 128 x 128"
                             style={{ width: 64, height: 64 }}
                         />
-                        <h1 style={titleStyle}>MyVault</h1>
+                        <h1 style={titleStyle}>MyVault2</h1>
                     </div>
                 </div>
 

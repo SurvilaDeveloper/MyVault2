@@ -1,11 +1,11 @@
-# MyVault
+# MyVault2
 
 ![Electron](https://img.shields.io/badge/Electron-App-blue)
 ![React](https://img.shields.io/badge/React-Frontend-61dafb)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Code-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-**MyVault** es un gestor **local, privado y seguro** de contraseñas y
+**MyVault2** es un gestor **local, privado y seguro** de contraseñas y
 notas desarrollado con **Electron, React y TypeScript**.
 
 La aplicación está diseñada para que el usuario mantenga el **control
@@ -61,7 +61,7 @@ para mejorar la seguridad.
 
 # Seguridad
 
-MyVault fue desarrollado siguiendo buenas prácticas de seguridad:
+MyVault2 fue desarrollado siguiendo buenas prácticas de seguridad:
 
 - cifrado del vault protegido por contraseña
 - auto-bloqueo automático de la sesión tras 5 minutos de inactividad
@@ -74,7 +74,7 @@ MyVault fue desarrollado siguiendo buenas prácticas de seguridad:
 
 Los datos se almacenan localmente en:
 
-    AppData/Roaming/MyVault
+    AppData/Roaming/MyVault2
 
 Cada usuario posee sus propios archivos cifrados:
 
@@ -91,11 +91,11 @@ Desde la sección **Releases** del repositorio.
 
 Instalador:
 
-    MyVault-Setup-x.x.x.exe
+    MyVault2-Setup-x.x.x.exe
 
 Versión portable:
 
-    MyVault-Portable-x.x.x.exe
+    MyVault2-Portable-x.x.x.exe
 
 ------------------------------------------------------------------------
 
@@ -115,8 +115,8 @@ Requisitos:
 Clonar repositorio:
 
 ``` bash
-git clone https://github.com/SurvilaDeveloper/MyVault.git
-cd MyVault
+git clone https://github.com/SurvilaDeveloper/MyVault2.git
+cd MyVault2
 ```
 
 Instalar dependencias:
@@ -191,13 +191,13 @@ surviladeveloper@gmail.com
 
 Repositorio:
 
-https://github.com/SurvilaDeveloper/MyVault
+https://github.com/SurvilaDeveloper/MyVault2
 
 ------------------------------------------------------------------------
 
 # Filosofía del proyecto
 
-MyVault sigue un principio simple:
+MyVault2 sigue un principio simple:
 
 > Tus contraseñas deben estar bajo tu control, no en un servidor
 > externo.

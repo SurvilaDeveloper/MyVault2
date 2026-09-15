@@ -1,38 +1,30 @@
-# Logs
-logs
+node_modules/
+
+# Salidas de compilación y empaquetado
+dist/
+dist-electron/
+dist-renderer/
+release/
+coverage/
+
+# Configuración local y secretos
+.env
+.env.*
+!.env.example
+auth.json
+*.vault
+*.vault.tmp
+
+# Registros y archivos temporales
 *.log
+*.tmp
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-release
-dist-electron
-dist-renderer
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# Archivos del sistema y del editor
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# electron local app data (por si alguna vez lo volcás al proyecto)
-*.vault
-auth.json
-
-# coverage
-coverage/
-
-# notas para desarrollo
-z.txt
-arquitectura_myvault.md
+Thumbs.db
+.idea/
+.vscode/

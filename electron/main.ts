@@ -11,6 +11,7 @@ import {
 } from 'electron'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { mkdirSync } from 'node:fs'
 import fs from 'node:fs/promises'
 import {
     createUser,
@@ -42,6 +43,17 @@ import {
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+
+const APP_NAME = 'MyVault2'
+app.setName(APP_NAME)
+
+const APP_USER_DATA_PATH = path.join(app.getPath('appData'), APP_NAME)
+const APP_SESSION_DATA_PATH = path.join(APP_USER_DATA_PATH, 'session')
+
+mkdirSync(APP_USER_DATA_PATH, { recursive: true })
+mkdirSync(APP_SESSION_DATA_PATH, { recursive: true })
+app.setPath('userData', APP_USER_DATA_PATH)
+app.setPath('sessionData', APP_SESSION_DATA_PATH)
 
 let win: BrowserWindow | null = null
 let helpWin: BrowserWindow | null = null
@@ -141,7 +153,7 @@ function createWindow() {
         height: 730,
         minWidth: 256,
         minHeight: 256,
-        title: 'MyVault',
+        title: APP_NAME,
         icon: getWindowIconPath(),
         backgroundColor: WINDOW_BACKGROUND,
         autoHideMenuBar: false,
@@ -187,7 +199,7 @@ function openHelpWindow() {
         height: 700,
         minWidth: 760,
         minHeight: 560,
-        title: 'Documentación - MyVault',
+        title: `Documentación - ${APP_NAME}`,
         icon: getWindowIconPath(),
         backgroundColor: AUX_WINDOW_BACKGROUND,
         autoHideMenuBar: true,
@@ -228,7 +240,7 @@ function openAboutMyVaultWindow() {
         height: 720,
         minWidth: 700,
         minHeight: 520,
-        title: 'Acerca de MyVault',
+        title: `Acerca de ${APP_NAME}`,
         icon: getWindowIconPath(),
         backgroundColor: AUX_WINDOW_BACKGROUND,
         autoHideMenuBar: true,
@@ -306,7 +318,7 @@ function createAppMenu() {
 
     const appSubmenu: MenuItemConstructorOptions[] = [
         {
-            label: 'About MyVault',
+            label: `About ${APP_NAME}`,
             click: () => openAboutMyVaultWindow(),
         },
         { type: 'separator' },
@@ -369,7 +381,7 @@ function createAppMenu() {
             click: () => openHelpWindow(),
         },
         {
-            label: 'Acerca de MyVault',
+            label: `Acerca de ${APP_NAME}`,
             click: () => openAboutMyVaultWindow(),
         },
         {

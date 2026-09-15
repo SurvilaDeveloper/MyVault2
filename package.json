@@ -1,6 +1,6 @@
 {
-  "name": "myvault",
-  "productName": "MyVault",
+  "name": "myvault2",
+  "productName": "MyVault2",
   "description": "Gestor local y privado de contraseñas y notas",
   "author": "Gabriel Survila",
   "private": true,
@@ -38,8 +38,8 @@
     "vite-plugin-electron-renderer": "^0.14.5"
   },
   "build": {
-    "appId": "com.surviladeveloper.myvault",
-    "productName": "MyVault",
+    "appId": "com.surviladeveloper.myvault2",
+    "productName": "MyVault2",
     "compression": "maximum",
     "asar": true,
     "files": [
