@@ -82,8 +82,12 @@ declare global {
     interface BackupRestoreResult {
         ok: boolean
         error?: string
-        passwordCount?: number
-        noteCount?: number
+        addedPasswordCount?: number
+        skippedPasswordCount?: number
+        addedNoteCount?: number
+        skippedNoteCount?: number
+        entries?: VaultEntry[]
+        notes?: NoteEntry[]
     }
 
     interface Window {

@@ -158,7 +158,7 @@ export function RecoveryPanel({
         }
 
         setBusy(true)
-        setModalStatus('Validando y restaurando el respaldo en AppData...')
+        setModalStatus('Validando y restaurando el respaldo en este equipo...')
 
         try {
             const result = await onRestoreBackup(loginPassword, vaultPassword)
@@ -203,10 +203,10 @@ export function RecoveryPanel({
 
     const modalDescription =
         modal === 'export'
-            ? 'La copia incluirá las contraseñas y las anotaciones guardadas. Los archivos seguirán cifrados y el vault activo continuará en AppData.'
+            ? 'La copia incluirá las contraseñas y las anotaciones guardadas. Los archivos seguirán cifrados y tus datos habituales permanecerán en este equipo.'
             : modal === 'open'
                 ? 'Elegirás una carpeta que contenga recovery.json. El respaldo se abrirá en modo de solo lectura y nunca se modificará.'
-                : 'El usuario actual debe estar vacío. Los datos se volverán a cifrar con su master password y se guardarán en AppData.'
+                : 'Se conservarán los datos actuales. Solo se agregarán contraseñas y anotaciones cuyo contenido no sea exactamente igual al de un registro existente; todo quedará cifrado con la master password de este usuario.'
 
     return (
         <>

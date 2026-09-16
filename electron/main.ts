@@ -48,6 +48,7 @@ import {
     openRecoveryBackup,
     type OpenedRecoveryBackup,
 } from './backup'
+import { mergeRecoveryData } from './backupMerge'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -948,52 +949,59 @@ ipcMain.handle(
                 loadNotesVault(user, currentVaultPassword),
             ])
 
-            if (currentVault.entries.length > 0 || currentNotes.notes.length > 0) {
-                return {
-                    ok: false,
-                    error:
-                        'La restauración solo está permitida en un usuario vacío. Creá un usuario nuevo para recuperar este respaldo.',
-                }
-            }
-
-            const vaultPayload = encryptVaultData(
-                currentVaultPassword,
+            const merged = mergeRecoveryData(
+                currentVault,
+                currentNotes,
                 backup.vaultData,
-            )
-            const notesPayload = encryptNotesData(
-                currentVaultPassword,
                 backup.notesData,
             )
-            const previousVaultPayload = encryptVaultData(
-                currentVaultPassword,
-                currentVault,
-            )
-            const previousNotesPayload = encryptNotesData(
-                currentVaultPassword,
-                currentNotes,
-            )
+
+            const vaultPayload = merged.addedPasswordCount > 0
+                ? encryptVaultData(currentVaultPassword, merged.vaultData)
+                : null
+            const notesPayload = merged.addedNoteCount > 0
+                ? encryptNotesData(currentVaultPassword, merged.notesData)
+                : null
+            const previousVaultPayload = vaultPayload
+                ? encryptVaultData(currentVaultPassword, currentVault)
+                : null
+            const previousNotesPayload = notesPayload
+                ? encryptNotesData(currentVaultPassword, currentNotes)
+                : null
 
             try {
-                await replaceVaultFileAtomically(user, vaultPayload)
-                await replaceNotesFileAtomically(user, notesPayload)
+                if (vaultPayload) await replaceVaultFileAtomically(user, vaultPayload)
+                if (notesPayload) await replaceNotesFileAtomically(user, notesPayload)
             } catch (writeError) {
-                await Promise.allSettled([
-                    replaceVaultFileAtomically(user, previousVaultPayload),
-                    replaceNotesFileAtomically(user, previousNotesPayload),
+                const rollback = await Promise.allSettled([
+                    ...(previousVaultPayload
+                        ? [replaceVaultFileAtomically(user, previousVaultPayload)]
+                        : []),
+                    ...(previousNotesPayload
+                        ? [replaceNotesFileAtomically(user, previousNotesPayload)]
+                        : []),
                 ])
+
+                if (rollback.some((result) => result.status === 'rejected')) {
+                    throw new Error(
+                        'La restauración falló y no se pudo revertir por completo. Revisá los datos locales antes de volver a intentarlo.',
+                    )
+                }
+
                 throw writeError
             }
-
-            const passwordCount = backup.vaultData.entries.length
-            const noteCount = backup.notesData.notes.length
 
             openedRecoveryBackup = null
             await resetClipboardSecretTracking()
 
             return {
                 ok: true,
-                passwordCount,
-                noteCount,
+                addedPasswordCount: merged.addedPasswordCount,
+                skippedPasswordCount: merged.skippedPasswordCount,
+                addedNoteCount: merged.addedNoteCount,
+                skippedNoteCount: merged.skippedNoteCount,
+                entries: merged.vaultData.entries,
+                notes: merged.notesData.notes,
             }
         } catch (error) {
             await Promise.allSettled([

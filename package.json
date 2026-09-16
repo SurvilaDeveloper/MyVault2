@@ -4,7 +4,7 @@
   "description": "Gestor local y privado de contraseñas y notas",
   "author": "Gabriel Survila",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.2.0",
   "type": "module",
   "engines": {
     "node": ">=22.12.0"
@@ -13,9 +13,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "test": "node --experimental-strip-types --test tests/backupMerge.test.ts",
     "dist": "npm run build && electron-builder",
     "electron": "electron .",
-    "lint": "eslint electron src vite.config.ts --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint electron src tests vite.config.ts --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {

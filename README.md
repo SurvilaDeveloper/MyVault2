@@ -28,7 +28,7 @@ localmente en el dispositivo**.
 - 📂 Datos almacenados **solo en el dispositivo**
 - 💾 Copias de respaldo cifradas en una carpeta o pen drive
 - 👁 Apertura de respaldos externos en **modo de solo lectura**
-- ♻️ Restauración segura en un usuario local vacío
+- ♻️ Restauración que conserva los datos locales y evita duplicados
 - 🚫 **Sin conexión obligatoria a internet**
 
 ------------------------------------------------------------------------
@@ -96,16 +96,23 @@ Desde el panel principal se puede elegir **Guardar copia en...** para crear una
 carpeta de recuperación en un pen drive u otra ubicación. MyVault2 solicita
 nuevamente la contraseña de login y la master password antes de exportar.
 
-Para recuperar los datos en otra computadora:
+Para recuperar los datos en otra computadora o combinar un respaldo con los
+datos que ya están en este equipo:
 
 1. Instalar o ejecutar la versión portable de MyVault2.
-2. Crear un usuario nuevo y vacío.
+2. Crear un usuario nuevo o iniciar sesión en uno existente.
 3. Elegir **Abrir respaldo...** y seleccionar la carpeta que contiene
    `recovery.json`.
 4. Introducir la master password del respaldo.
 5. Revisar las contraseñas y anotaciones en modo de solo lectura.
-6. Elegir **Restaurar en este equipo** para volver a cifrar los datos y
-   guardarlos en `AppData/Roaming/MyVault2`.
+6. Elegir **Restaurar en este equipo** para agregar los registros que falten.
+
+Una contraseña se considera duplicada solo si **Cuenta**, **Usuario** y
+**Contraseña** son exactamente iguales. Una anotación se considera duplicada
+solo si coinciden exactamente **título** y **texto**. Si cualquiera de esos
+campos difiere, se conserva como un registro nuevo. Los datos locales existentes
+se mantienen y los registros agregados se cifran con la master password del
+usuario actual. Repetir la restauración no añade copias idénticas.
 
 La carpeta externa nunca se modifica durante la apertura ni la restauración.
 

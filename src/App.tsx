@@ -39,6 +39,10 @@ function sortEntriesByAccount(entries: Entry[]): Entry[] {
   )
 }
 
+function counted(count: number, singular: string, plural: string) {
+  return `${count} ${count === 1 ? singular : plural}`
+}
+
 type ConfirmAction =
   | { type: 'delete-entry'; index: number }
   | { type: 'delete-note'; noteId: string }
@@ -428,7 +432,7 @@ export default function App() {
     loginPassword: string,
     currentVaultPassword: string,
   ) {
-    setStatus('Restaurando respaldo en AppData...')
+    setStatus('Restaurando respaldo en este equipo...')
 
     const result = await window.api.restoreBackup(loginPassword, currentVaultPassword)
 
@@ -437,19 +441,24 @@ export default function App() {
       return result
     }
 
-    const restored = externalBackup
+    const mergedEntries = result.entries ?? []
+    const mergedNotes = result.notes ?? []
+    const addedPasswords = result.addedPasswordCount ?? 0
+    const skippedPasswords = result.skippedPasswordCount ?? 0
+    const addedNotes = result.addedNoteCount ?? 0
+    const skippedNotes = result.skippedNoteCount ?? 0
 
     setExternalBackup(null)
-    setEntries(restored ? sortEntriesByAccount(restored.entries) : [])
-    setNotes(restored?.notes ?? [])
-    setSelectedNoteId(restored?.notes[0]?.id ?? null)
-    setNoteDraft(restored?.notes[0] ? { ...restored.notes[0] } : null)
+    setEntries(sortEntriesByAccount(mergedEntries))
+    setNotes(mergedNotes)
+    setSelectedNoteId(mergedNotes[0]?.id ?? null)
+    setNoteDraft(mergedNotes[0] ? { ...mergedNotes[0] } : null)
     setNotesSearch('')
     setShowPasswords(false)
     setVisiblePasswords({})
     setCopiedEntryId(null)
     setStatus(
-      `Respaldo restaurado: ${result.passwordCount ?? 0} contraseñas y ${result.noteCount ?? 0} anotaciones guardadas en AppData.`,
+      `Restauración completada: se agregaron ${counted(addedPasswords, 'contraseña', 'contraseñas')} y ${counted(addedNotes, 'anotación', 'anotaciones')}. Se omitieron ${counted(skippedPasswords, 'contraseña', 'contraseñas')} y ${counted(skippedNotes, 'anotación', 'anotaciones')} ya existentes.`,
     )
 
     return result

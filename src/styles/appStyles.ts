@@ -7,12 +7,25 @@ const appFontFamily =
 const readableInputFontFamily =
     'Georgia, "Times New Roman", Times, serif'
 
+const palette = {
+    text: '#f4edff',
+    muted: '#b8a9c9',
+    label: '#ded1ec',
+    surface: 'rgba(27, 18, 43, 0.88)',
+    surfaceSolid: '#20152f',
+    inset: '#140e22',
+    border: '#4a365f',
+    borderStrong: '#604776',
+    accent: '#7c3aed',
+    accentTint: 'rgba(139, 92, 246, 0.18)',
+}
+
 export const pageStyle: CSSProperties = {
     minHeight: '96dvh',
     background:
-        'radial-gradient(circle at top, #1e293b 0%, #0f172a 35%, #020617 100%)',
+        'radial-gradient(circle at top, #2b1b43 0%, #160f27 42%, #090613 100%)',
     fontFamily: appFontFamily,
-    color: '#e5e7eb',
+    color: palette.text,
     padding: 14,
     boxSizing: 'border-box',
 }
@@ -32,14 +45,14 @@ export const titleStyle: CSSProperties = {
     margin: 0,
     fontSize: 35,
     fontWeight: 700,
-    color: '#f8fafc',
+    color: palette.text,
     fontFamily: appFontFamily,
 }
 
 export const subtitleStyle: CSSProperties = {
     marginTop: 8,
     fontSize: 15,
-    color: '#94a3b8',
+    color: palette.muted,
     fontFamily: appFontFamily,
 }
 
@@ -58,21 +71,21 @@ export const homeGridStyle: CSSProperties = {
 }
 
 export const cardStyle: CSSProperties = {
-    background: 'rgba(15, 23, 42, 0.82)',
+    background: palette.surface,
     borderRadius: 16,
     padding: 18,
-    boxShadow: '0 18px 40px rgba(0, 0, 0, 0.35)',
-    border: '1px solid #243041',
+    boxShadow: '0 18px 40px rgba(6, 2, 17, 0.42)',
+    border: `1px solid ${palette.border}`,
     backdropFilter: 'blur(10px)',
     fontFamily: appFontFamily,
 }
 
 export const homeCardStyle: CSSProperties = {
-    background: 'rgba(15, 23, 42, 0.82)',
+    background: palette.surface,
     borderRadius: 16,
     padding: 20,
-    boxShadow: '0 18px 40px rgba(0, 0, 0, 0.35)',
-    border: '1px solid #243041',
+    boxShadow: '0 18px 40px rgba(6, 2, 17, 0.42)',
+    border: `1px solid ${palette.border}`,
     backdropFilter: 'blur(10px)',
     fontFamily: appFontFamily,
 }
@@ -81,14 +94,14 @@ export const cardTitleStyle: CSSProperties = {
     marginTop: 0,
     marginBottom: 12,
     fontSize: 18,
-    color: '#f8fafc',
+    color: palette.text,
     fontFamily: appFontFamily,
 }
 
 export const homeCardTextStyle: CSSProperties = {
     marginTop: 0,
     marginBottom: 14,
-    color: '#94a3b8',
+    color: palette.muted,
     lineHeight: 1.45,
     fontSize: 14,
     fontFamily: appFontFamily,
@@ -100,7 +113,7 @@ export const labelStyle: CSSProperties = {
     marginTop: 6,
     fontSize: 12,
     fontWeight: 600,
-    color: '#cbd5e1',
+    color: palette.label,
     fontFamily: appFontFamily,
 }
 
@@ -108,12 +121,12 @@ export const inputStyle: CSSProperties = {
     width: '100%',
     padding: '8px 10px',
     borderRadius: 10,
-    border: '1px solid #334155',
+    border: `1px solid ${palette.borderStrong}`,
     fontSize: 14,
     boxSizing: 'border-box',
     outline: 'none',
-    background: '#0f172a',
-    color: '#f8fafc',
+    background: palette.inset,
+    color: palette.text,
     fontFamily: readableInputFontFamily,
     fontVariantLigatures: 'none',
 }
@@ -122,12 +135,12 @@ export const searchInputStyle: CSSProperties = {
     width: '100%',
     padding: '9px 11px',
     borderRadius: 10,
-    border: '1px solid #334155',
+    border: `1px solid ${palette.borderStrong}`,
     fontSize: 13,
     boxSizing: 'border-box',
     outline: 'none',
-    background: '#0f172a',
-    color: '#f8fafc',
+    background: palette.inset,
+    color: palette.text,
     marginBottom: 12,
     fontFamily: readableInputFontFamily,
     fontVariantLigatures: 'none',
@@ -138,12 +151,12 @@ export const textareaStyle: CSSProperties = {
     minHeight: 256,
     padding: '10px 12px',
     borderRadius: 10,
-    border: '1px solid #334155',
+    border: `1px solid ${palette.borderStrong}`,
     fontSize: 14,
     boxSizing: 'border-box',
     outline: 'none',
-    background: '#0f172a',
-    color: '#f8fafc',
+    background: palette.inset,
+    color: palette.text,
     resize: 'vertical',
     fontFamily: readableInputFontFamily,
     lineHeight: 1.45,
@@ -158,7 +171,7 @@ export const primaryButtonStyle: CSSProperties = {
     cursor: 'pointer',
     fontSize: 14,
     fontWeight: 600,
-    background: '#2563eb',
+    background: palette.accent,
     color: '#fff',
     fontFamily: appFontFamily,
 }
@@ -167,23 +180,23 @@ export const secondaryButtonStyle: CSSProperties = {
     marginTop: 14,
     padding: '10px 14px',
     borderRadius: 10,
-    border: '1px solid #334155',
+    border: `1px solid ${palette.borderStrong}`,
     cursor: 'pointer',
     fontSize: 14,
     fontWeight: 600,
-    background: '#111827',
-    color: '#e5e7eb',
+    background: palette.surfaceSolid,
+    color: palette.text,
     fontFamily: appFontFamily,
 }
 
 export const ghostButtonStyle: CSSProperties = {
     padding: '9px 13px',
     borderRadius: 10,
-    border: '1px solid #334155',
+    border: `1px solid ${palette.borderStrong}`,
     cursor: 'pointer',
     fontSize: 13,
-    background: '#0f172a',
-    color: '#e2e8f0',
+    background: palette.inset,
+    color: palette.text,
     fontFamily: appFontFamily,
 }
 
@@ -200,12 +213,12 @@ export const dangerButtonStyle: CSSProperties = {
 
 export const statusBoxStyle: CSSProperties = {
     marginTop: 14,
-    background: 'rgba(15, 23, 42, 0.82)',
-    border: '1px solid #243041',
+    background: palette.surface,
+    border: `1px solid ${palette.border}`,
     borderRadius: 12,
     padding: '10px 12px',
-    color: '#ddcea0',
-    boxShadow: '0 12px 30px rgba(0, 0, 0, 0.25)',
+    color: '#ddc8ff',
+    boxShadow: '0 12px 30px rgba(6, 2, 17, 0.32)',
     fontSize: 13,
     fontFamily: appFontFamily,
 }
@@ -213,11 +226,11 @@ export const statusBoxStyle: CSSProperties = {
 export const appShellStyle: CSSProperties = {
     maxWidth: 1280,
     margin: '0 auto',
-    background: 'rgba(15, 23, 42, 0.86)',
+    background: palette.surface,
     borderRadius: 18,
     padding: 18,
-    boxShadow: '0 22px 50px rgba(0, 0, 0, 0.35)',
-    border: '1px solid #243041',
+    boxShadow: '0 22px 50px rgba(6, 2, 17, 0.46)',
+    border: `1px solid ${palette.border}`,
     backdropFilter: 'blur(10px)',
     fontFamily: appFontFamily,
 }
@@ -245,7 +258,7 @@ export const tableHeaderStyle: CSSProperties = {
     gap: 12,
     fontSize: 12,
     fontWeight: 700,
-    color: '#94a3b8',
+    color: palette.muted,
     marginBottom: 8,
     padding: '0 4px',
     fontFamily: appFontFamily,
@@ -265,8 +278,8 @@ export const rowStyle4: CSSProperties = {
     alignItems: 'center',
     padding: 10,
     borderRadius: 14,
-    background: '#111827',
-    border: '1px solid #243041',
+    background: palette.surfaceSolid,
+    border: `1px solid ${palette.border}`,
     fontFamily: appFontFamily,
 }
 
@@ -274,9 +287,9 @@ export const emptyStateStyle: CSSProperties = {
     padding: 18,
     textAlign: 'center',
     borderRadius: 14,
-    background: '#0f172a',
-    border: '1px dashed #334155',
-    color: '#94a3b8',
+    background: palette.inset,
+    border: `1px dashed ${palette.borderStrong}`,
+    color: palette.muted,
     fontSize: 13,
     fontFamily: appFontFamily,
 }
@@ -290,8 +303,8 @@ export const notesLayoutStyle: CSSProperties = {
 }
 
 export const notesSidebarStyle: CSSProperties = {
-    background: '#111827',
-    border: '1px solid #243041',
+    background: palette.surfaceSolid,
+    border: `1px solid ${palette.border}`,
     borderRadius: 16,
     padding: 14,
     minHeight: 360,
@@ -310,7 +323,7 @@ export const notesSidebarHeaderRowStyle: CSSProperties = {
 export const notesSidebarHeaderStyle: CSSProperties = {
     fontSize: 13,
     fontWeight: 700,
-    color: '#cbd5e1',
+    color: palette.label,
     fontFamily: appFontFamily,
 }
 
@@ -350,9 +363,9 @@ export const noteListButtonStyle: CSSProperties = {
     textAlign: 'left',
     padding: '10px 12px',
     borderRadius: 10,
-    border: '1px solid #334155',
-    background: '#0f172a',
-    color: '#e5e7eb',
+    border: `1px solid ${palette.borderStrong}`,
+    background: palette.inset,
+    color: palette.text,
     cursor: 'pointer',
     fontSize: 13,
     fontWeight: 600,
@@ -360,9 +373,9 @@ export const noteListButtonStyle: CSSProperties = {
 }
 
 export const noteListButtonActiveStyle: CSSProperties = {
-    border: '1px solid #3b82f6',
-    background: 'rgba(59, 130, 246, 0.14)',
-    color: '#bfdbfe',
+    border: '1px solid #a78bfa',
+    background: palette.accentTint,
+    color: '#ede9fe',
     fontFamily: appFontFamily,
 }
 
@@ -378,7 +391,7 @@ export const noteButtonTitleStyle: CSSProperties = {
 export const noteButtonMetaStyle: CSSProperties = {
     fontSize: 11,
     fontWeight: 500,
-    color: '#94a3b8',
+    color: palette.muted,
     fontFamily: appFontFamily,
 }
 
@@ -388,8 +401,8 @@ export const notesEditorStyle: CSSProperties = {
 }
 
 export const noteEditorCardStyle: CSSProperties = {
-    background: '#111827',
-    border: '1px solid #243041',
+    background: palette.surfaceSolid,
+    border: `1px solid ${palette.border}`,
     borderRadius: 16,
     padding: 14,
     fontFamily: appFontFamily,
@@ -398,7 +411,7 @@ export const noteEditorCardStyle: CSSProperties = {
 export const noteMetaStyle: CSSProperties = {
     fontSize: 12,
     fontWeight: 700,
-    color: '#94a3b8',
+    color: palette.muted,
     marginBottom: 6,
     fontFamily: appFontFamily,
 }
@@ -406,9 +419,9 @@ export const noteMetaStyle: CSSProperties = {
 export const emptySidebarStyle: CSSProperties = {
     padding: 12,
     borderRadius: 10,
-    background: '#0f172a',
-    border: '1px dashed #334155',
-    color: '#94a3b8',
+    background: palette.inset,
+    border: `1px dashed ${palette.borderStrong}`,
+    color: palette.muted,
     fontSize: 13,
     fontFamily: appFontFamily,
 }
@@ -416,7 +429,7 @@ export const emptySidebarStyle: CSSProperties = {
 export const modalOverlayStyle: CSSProperties = {
     position: 'fixed',
     inset: 0,
-    background: 'rgba(2, 6, 23, 0.68)',
+    background: 'rgba(6, 3, 14, 0.76)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -428,11 +441,11 @@ export const modalOverlayStyle: CSSProperties = {
 export const modalCardStyle: CSSProperties = {
     width: '100%',
     maxWidth: 500,
-    background: '#0f172a',
+    background: palette.surfaceSolid,
     borderRadius: 18,
     padding: 20,
-    boxShadow: '0 24px 60px rgba(0, 0, 0, 0.5)',
-    border: '1px solid #243041',
+    boxShadow: '0 24px 60px rgba(6, 2, 17, 0.55)',
+    border: `1px solid ${palette.border}`,
     fontFamily: appFontFamily,
 }
 
@@ -440,14 +453,14 @@ export const modalTitleStyle: CSSProperties = {
     margin: 0,
     fontSize: 21,
     fontWeight: 700,
-    color: '#f8fafc',
+    color: palette.text,
     fontFamily: appFontFamily,
 }
 
 export const modalTextStyle: CSSProperties = {
     marginTop: 10,
     marginBottom: 0,
-    color: '#cbd5e1',
+    color: palette.label,
     lineHeight: 1.5,
     fontSize: 14,
     fontFamily: appFontFamily,
@@ -468,9 +481,9 @@ export const iconButtonStyle: CSSProperties = {
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
-    border: '1px solid #334155',
-    background: '#0f172a',
-    color: '#e2e8f0',
+    border: `1px solid ${palette.borderStrong}`,
+    background: palette.inset,
+    color: palette.text,
     cursor: 'pointer',
     fontFamily: appFontFamily,
 }
