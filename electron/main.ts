@@ -87,7 +87,7 @@ function getWindowIconPath() {
         return path.join(app.getAppPath(), 'public', 'myvault.png')
     }
 
-    return path.join(process.resourcesPath, 'public', 'myvault.png')
+    return path.join(__dirname, '../dist-renderer/myvault.png')
 }
 
 function applyNativeDarkTheme() {
@@ -655,24 +655,21 @@ ipcMain.handle(
             }
         }
 
-        const trimmedCurrentVaultPassword = currentVaultPassword.trim()
-        const trimmedNewVaultPassword = newVaultPassword.trim()
-
-        if (!trimmedCurrentVaultPassword) {
+        if (!currentVaultPassword.trim()) {
             return {
                 ok: false,
                 error: 'La master password actual no puede estar vacía.',
             }
         }
 
-        if (!trimmedNewVaultPassword) {
+        if (!newVaultPassword.trim()) {
             return {
                 ok: false,
                 error: 'La nueva master password no puede estar vacía.',
             }
         }
 
-        if (trimmedCurrentVaultPassword === trimmedNewVaultPassword) {
+        if (currentVaultPassword === newVaultPassword) {
             return {
                 ok: false,
                 error: 'La nueva master password no puede ser igual a la actual.',
@@ -680,28 +677,28 @@ ipcMain.handle(
         }
 
         try {
-            const verifyResult = await verifyVaultPassword(user, trimmedCurrentVaultPassword)
+            const verifyResult = await verifyVaultPassword(user, currentVaultPassword)
 
             if (!verifyResult.ok) {
                 return verifyResult
             }
 
-            const vaultData = await loadVault(user, trimmedCurrentVaultPassword)
-            const notesData = await loadNotesVault(user, trimmedCurrentVaultPassword)
+            const vaultData = await loadVault(user, currentVaultPassword)
+            const notesData = await loadNotesVault(user, currentVaultPassword)
 
-            const newVaultPayload = encryptVaultData(trimmedNewVaultPassword, vaultData)
-            const newNotesPayload = encryptNotesData(trimmedNewVaultPassword, notesData)
+            const newVaultPayload = encryptVaultData(newVaultPassword, vaultData)
+            const newNotesPayload = encryptNotesData(newVaultPassword, notesData)
 
             await replaceVaultFileAtomically(user, newVaultPayload)
             await replaceNotesFileAtomically(user, newNotesPayload)
 
-            const updateHashResult = await updateVaultPasswordHash(user, trimmedNewVaultPassword)
+            const updateHashResult = await updateVaultPasswordHash(user, newVaultPassword)
 
             if (!updateHashResult.ok) {
                 return updateHashResult
             }
 
-            unlockedVaultPassword = trimmedNewVaultPassword
+            unlockedVaultPassword = newVaultPassword
 
             return { ok: true }
         } catch (error) {

@@ -139,12 +139,12 @@ export function HomeView({
             return
         }
 
-        if (trimmedNewPassword !== trimmedRepeatNewPassword) {
+        if (newPassword !== repeatNewPassword) {
             setPasswordStatus('La repetición de la nueva contraseña no coincide.')
             return
         }
 
-        if (trimmedCurrentPassword === trimmedNewPassword) {
+        if (currentPassword === newPassword) {
             setPasswordStatus('La nueva contraseña no puede ser igual a la actual.')
             return
         }
@@ -154,8 +154,8 @@ export function HomeView({
 
         try {
             const result = await window.api.changeLoginPassword(
-                trimmedCurrentPassword,
-                trimmedNewPassword,
+                currentPassword,
+                newPassword,
             )
 
             if (!result.ok) {
@@ -203,12 +203,12 @@ export function HomeView({
             return
         }
 
-        if (trimmedNewVaultPassword !== trimmedRepeatNewVaultPassword) {
+        if (newVaultPassword !== repeatNewVaultPassword) {
             setVaultPasswordStatus('La repetición de la nueva master password no coincide.')
             return
         }
 
-        if (trimmedCurrentVaultPassword === trimmedNewVaultPassword) {
+        if (currentVaultPassword === newVaultPassword) {
             setVaultPasswordStatus(
                 'La nueva master password no puede ser igual a la actual.',
             )
@@ -220,8 +220,8 @@ export function HomeView({
 
         try {
             const result = await window.api.changeVaultPassword(
-                trimmedCurrentVaultPassword,
-                trimmedNewVaultPassword,
+                currentVaultPassword,
+                newVaultPassword,
             )
 
             if (!result.ok) {

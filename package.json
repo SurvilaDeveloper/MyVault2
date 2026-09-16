@@ -3,6 +3,7 @@
   "productName": "MyVault2",
   "description": "Gestor local y privado de contraseñas y notas",
   "author": "Gabriel Survila",
+  "license": "MIT",
   "private": true,
   "version": "1.2.0",
   "type": "module",
@@ -13,7 +14,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "test": "node --experimental-strip-types --test tests/backupMerge.test.ts",
+    "test": "node --experimental-strip-types --test tests/backupMerge.test.ts tests/username.test.ts",
     "dist": "npm run build && electron-builder",
     "electron": "electron .",
     "lint": "eslint electron src tests vite.config.ts --report-unused-disable-directives --max-warnings 0",
@@ -49,7 +50,8 @@
     "files": [
       "dist-renderer/**/*",
       "dist-electron/**/*",
-      "package.json"
+      "package.json",
+      "LICENSE"
     ],
     "directories": {
       "buildResources": "public"

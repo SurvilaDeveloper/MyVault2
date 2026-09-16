@@ -115,6 +115,9 @@ se mantienen y los registros agregados se cifran con la master password del
 usuario actual. Repetir la restauración no añade copias idénticas.
 
 La carpeta externa nunca se modifica durante la apertura ni la restauración.
+La versión portable permite ejecutar el programa sin instalarlo, pero guarda
+los datos locales en el perfil de Windows de la computadora en uso. Para
+migrar, llevá también la carpeta de respaldo cifrada en el pen drive.
 
 ------------------------------------------------------------------------
 
@@ -122,7 +125,7 @@ La carpeta externa nunca se modifica durante la apertura ni la restauración.
 
 ## Descargar ejecutable
 
-Desde la sección **Releases** del repositorio.
+Desde [Releases](https://github.com/SurvilaDeveloper/MyVault2/releases) del repositorio.
 
 Instalador:
 
@@ -134,9 +137,11 @@ Versión portable:
 
 ------------------------------------------------------------------------
 
-# Open Source
+# Ejecutables de Windows
 
-La build es open source y puede mostrar advertencia de Windows por no estar firmada con certificado reconocido.
+Los ejecutables no están firmados digitalmente y Windows puede mostrar una
+advertencia al abrirlos. Consultá el origen y las sumas SHA-256 publicadas en
+cada versión antes de ejecutarlos.
 
 ------------------------------------------------------------------------
 
@@ -172,7 +177,7 @@ Construir aplicación:
 npm run build
 ```
 
-Generar instalador y versión portable:
+Generar instalador y versión portable en Windows:
 
 ``` bash
 npm run dist
@@ -181,6 +186,12 @@ npm run dist
 Los binarios se generarán en:
 
     /dist
+
+También podés ejecutar manualmente **Compilar MyVault2 para Windows** desde la
+pestaña **Actions**. Al finalizar, descargá el archivo generado en la sección
+**Artifacts** de esa ejecución, extraé los dos `.exe`, probalos en Windows y
+adjuntalos junto con `SHA256SUMS.txt` y `LICENSE` a una nueva versión en
+**Releases**.
 
 ------------------------------------------------------------------------
 
@@ -201,7 +212,6 @@ Los binarios se generarán en:
 
     dist-electron/
     dist-renderer/
-    release/
 
 ------------------------------------------------------------------------
 
@@ -210,7 +220,6 @@ Los binarios se generarán en:
 Funciones planificadas:
 
 -   generador de contraseñas seguras
--   combinación controlada de respaldos con usuarios que ya tengan datos
 -   mejoras de interfaz
 -   soporte multiplataforma (Linux y macOS)
 
@@ -218,9 +227,8 @@ Funciones planificadas:
 
 # Licencia
 
-Este proyecto es **software libre y de código abierto**.
-
-Licencia sugerida: **MIT**
+MyVault2 se distribuye bajo la [licencia MIT](LICENSE). Copyright © 2026
+Gabriel Survila.
 
 ------------------------------------------------------------------------
 

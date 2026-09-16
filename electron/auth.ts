@@ -3,6 +3,7 @@ import { app } from 'electron'
 import path from 'node:path'
 import fs from 'node:fs/promises'
 import bcrypt from 'bcryptjs'
+import { normalizeUsername, validateNewUsername } from './username'
 
 type AuthUser = {
     username: string
@@ -27,10 +28,6 @@ function authPath() {
 
 function authTempPath() {
     return `${authPath()}.tmp`
-}
-
-function normalizeUsername(username: string) {
-    return username.trim().toLowerCase()
 }
 
 function isAuthUser(value: unknown): value is AuthUser {
@@ -109,18 +106,17 @@ export async function createUser(
     vaultPassword: string,
 ) {
     const normalizedUsername = normalizeUsername(username)
-    const trimmedPassword = password.trim()
-    const trimmedVaultPassword = vaultPassword.trim()
+    const invalidUsername = validateNewUsername(normalizedUsername)
 
-    if (!normalizedUsername) {
-        throw new Error('El usuario no puede estar vacío.')
+    if (invalidUsername) {
+        throw new Error(invalidUsername)
     }
 
-    if (!trimmedPassword) {
+    if (!password.trim()) {
         throw new Error('La contraseña de login no puede estar vacía.')
     }
 
-    if (!trimmedVaultPassword) {
+    if (!vaultPassword.trim()) {
         throw new Error('La master password no puede estar vacía.')
     }
 
@@ -130,8 +126,8 @@ export async function createUser(
         throw new Error('Ese usuario ya existe.')
     }
 
-    const passwordHash = await bcrypt.hash(trimmedPassword, 10)
-    const vaultPasswordHash = await bcrypt.hash(trimmedVaultPassword, 10)
+    const passwordHash = await bcrypt.hash(password, 10)
+    const vaultPasswordHash = await bcrypt.hash(vaultPassword, 10)
 
     data.users.push({
         username: normalizedUsername,
@@ -212,24 +208,21 @@ export async function changeLoginPassword(
     newPassword: string,
 ): Promise<BasicResult> {
     const normalizedUsername = normalizeUsername(username)
-    const trimmedCurrentPassword = currentPassword.trim()
-    const trimmedNewPassword = newPassword.trim()
-
-    if (!trimmedCurrentPassword) {
+    if (!currentPassword.trim()) {
         return {
             ok: false,
             error: 'La contraseña actual no puede estar vacía.',
         }
     }
 
-    if (!trimmedNewPassword) {
+    if (!newPassword.trim()) {
         return {
             ok: false,
             error: 'La nueva contraseña no puede estar vacía.',
         }
     }
 
-    if (trimmedCurrentPassword === trimmedNewPassword) {
+    if (currentPassword === newPassword) {
         return {
             ok: false,
             error: 'La nueva contraseña no puede ser igual a la actual.',
@@ -246,7 +239,7 @@ export async function changeLoginPassword(
         }
     }
 
-    const valid = await bcrypt.compare(trimmedCurrentPassword, user.passwordHash)
+    const valid = await bcrypt.compare(currentPassword, user.passwordHash)
 
     if (!valid) {
         return {
@@ -255,7 +248,7 @@ export async function changeLoginPassword(
         }
     }
 
-    user.passwordHash = await bcrypt.hash(trimmedNewPassword, 10)
+    user.passwordHash = await bcrypt.hash(newPassword, 10)
     await writeAuth(data)
 
     return { ok: true }
@@ -266,9 +259,7 @@ export async function updateVaultPasswordHash(
     newVaultPassword: string,
 ): Promise<BasicResult> {
     const normalizedUsername = normalizeUsername(username)
-    const trimmedNewVaultPassword = newVaultPassword.trim()
-
-    if (!trimmedNewVaultPassword) {
+    if (!newVaultPassword.trim()) {
         return {
             ok: false,
             error: 'La nueva master password no puede estar vacía.',
@@ -285,7 +276,7 @@ export async function updateVaultPasswordHash(
         }
     }
 
-    user.vaultPasswordHash = await bcrypt.hash(trimmedNewVaultPassword, 10)
+    user.vaultPasswordHash = await bcrypt.hash(newVaultPassword, 10)
     await writeAuth(data)
 
     return { ok: true }
