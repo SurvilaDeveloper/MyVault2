@@ -32,7 +32,7 @@ jobs:
         run: npm run lint
 
       - name: Generar instalador y versión portable
-        run: npm run dist
+        run: npm run dist -- --publish never
 
       - name: Verificar archivos y generar sumas SHA-256
         shell: pwsh
