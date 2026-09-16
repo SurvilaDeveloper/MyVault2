@@ -1,6 +1,6 @@
 //src/components/views/AuthView.tsx
 import { useState, type Dispatch, type SetStateAction } from 'react'
-import { Eye, EyeOff } from 'lucide-react'
+import { AlertTriangle, Eye, EyeOff } from 'lucide-react'
 import {
     authGridStyle,
     authWrapperStyle,
@@ -31,6 +31,9 @@ type AuthViewProps = {
     setRegisterVaultPassword: Dispatch<SetStateAction<string>>
     registerVaultPasswordConfirm: string
     setRegisterVaultPasswordConfirm: Dispatch<SetStateAction<string>>
+    registrationWarningShown: boolean
+    creatingUser: boolean
+    onRegistrationChange: () => void
     status: string
     onLogin: () => void
     onCreateUser: () => void
@@ -52,6 +55,9 @@ export function AuthView(props: AuthViewProps) {
         setRegisterVaultPassword,
         registerVaultPasswordConfirm,
         setRegisterVaultPasswordConfirm,
+        registrationWarningShown,
+        creatingUser,
+        onRegistrationChange,
         status,
         onLogin,
         onCreateUser,
@@ -71,6 +77,7 @@ export function AuthView(props: AuthViewProps) {
         placeholder,
         visible,
         onToggleVisible,
+        disabled = false,
     }: {
         label: string
         value: string
@@ -78,6 +85,7 @@ export function AuthView(props: AuthViewProps) {
         placeholder: string
         visible: boolean
         onToggleVisible: () => void
+        disabled?: boolean
     }) {
         return (
             <>
@@ -94,11 +102,13 @@ export function AuthView(props: AuthViewProps) {
                         value={value}
                         onChange={(e) => onChange(e.target.value)}
                         placeholder={placeholder}
+                        disabled={disabled}
                     />
 
                     <button
                         type="button"
                         onClick={onToggleVisible}
+                        disabled={disabled}
                         title={visible ? 'Ocultar contraseña' : 'Mostrar contraseña'}
                         style={{
                             position: 'absolute',
@@ -178,52 +188,100 @@ export function AuthView(props: AuthViewProps) {
                         <input
                             style={inputStyle}
                             value={registerUsername}
-                            onChange={(e) => setRegisterUsername(e.target.value)}
+                            onChange={(e) => {
+                                onRegistrationChange()
+                                setRegisterUsername(e.target.value)
+                            }}
                             placeholder="Elegí un usuario"
+                            disabled={creatingUser}
                         />
 
                         {renderPasswordField({
                             label: 'Contraseña de login',
                             value: registerPassword,
-                            onChange: setRegisterPassword,
+                            onChange: (value) => {
+                                onRegistrationChange()
+                                setRegisterPassword(value)
+                            },
                             placeholder: 'Elegí una contraseña de login',
                             visible: showRegisterPassword,
                             onToggleVisible: () =>
                                 setShowRegisterPassword((v) => !v),
+                            disabled: creatingUser,
                         })}
 
                         {renderPasswordField({
                             label: 'Confirmar contraseña de login',
                             value: registerPasswordConfirm,
-                            onChange: setRegisterPasswordConfirm,
+                            onChange: (value) => {
+                                onRegistrationChange()
+                                setRegisterPasswordConfirm(value)
+                            },
                             placeholder: 'Repetí la contraseña de login',
                             visible: showRegisterPasswordConfirm,
                             onToggleVisible: () =>
                                 setShowRegisterPasswordConfirm((v) => !v),
+                            disabled: creatingUser,
                         })}
 
                         {renderPasswordField({
                             label: 'Master password del vault',
                             value: registerVaultPassword,
-                            onChange: setRegisterVaultPassword,
+                            onChange: (value) => {
+                                onRegistrationChange()
+                                setRegisterVaultPassword(value)
+                            },
                             placeholder: 'Elegí una master password',
                             visible: showRegisterVaultPassword,
                             onToggleVisible: () =>
                                 setShowRegisterVaultPassword((v) => !v),
+                            disabled: creatingUser,
                         })}
 
                         {renderPasswordField({
                             label: 'Confirmar master password',
                             value: registerVaultPasswordConfirm,
-                            onChange: setRegisterVaultPasswordConfirm,
+                            onChange: (value) => {
+                                onRegistrationChange()
+                                setRegisterVaultPasswordConfirm(value)
+                            },
                             placeholder: 'Repetí la master password',
                             visible: showRegisterVaultPasswordConfirm,
                             onToggleVisible: () =>
                                 setShowRegisterVaultPasswordConfirm((v) => !v),
+                            disabled: creatingUser,
                         })}
 
-                        <button style={secondaryButtonStyle} onClick={onCreateUser}>
-                            Crear usuario
+                        {registrationWarningShown ? (
+                            <div
+                                role="alert"
+                                style={{
+                                    ...statusBoxStyle,
+                                    display: 'flex',
+                                    alignItems: 'flex-start',
+                                    gap: 10,
+                                    border: '1px solid rgba(251, 191, 36, 0.45)',
+                                    background: 'rgba(251, 191, 36, 0.10)',
+                                    color: '#fde68a',
+                                    lineHeight: 1.5,
+                                }}
+                            >
+                                <AlertTriangle size={19} style={{ flex: '0 0 auto' }} />
+                                <span>
+                                    No olvides la contraseña de login ni la master password.
+                                    Por seguridad, MyVault2 no puede recuperarlas si las perdés.
+                                    Para confirmar, volvé a presionar «Crear usuario».
+                                </span>
+                            </div>
+                        ) : null}
+
+                        <button
+                            type="button"
+                            style={secondaryButtonStyle}
+                            onClick={onCreateUser}
+                            disabled={creatingUser}
+                        >
+                            {creatingUser ? 'Creando usuario...' : 'Crear usuario'}
                         </button>
                     </section>
                 </div>

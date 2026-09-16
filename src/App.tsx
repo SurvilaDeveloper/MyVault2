@@ -81,6 +81,8 @@ export default function App() {
   const [registerPasswordConfirm, setRegisterPasswordConfirm] = useState('')
   const [registerVaultPassword, setRegisterVaultPassword] = useState('')
   const [registerVaultPasswordConfirm, setRegisterVaultPasswordConfirm] = useState('')
+  const [registrationWarningShown, setRegistrationWarningShown] = useState(false)
+  const [creatingUser, setCreatingUser] = useState(false)
 
   const [unlockPassword, setUnlockPassword] = useState('')
 
@@ -305,11 +307,29 @@ export default function App() {
 
     setLoginPassword('')
     setUnlockPassword('')
+    setRegistrationWarningShown(false)
     setView('unlock')
     setStatus('Sesión iniciada. Ahora desbloqueá el vault.')
   }
 
   async function handleCreateUser() {
+    if (creatingUser) return
+
+    if (!registerUsername.trim()) {
+      setStatus('Ingresá un nombre de usuario.')
+      return
+    }
+
+    if (!registerPassword.trim()) {
+      setStatus('Ingresá una contraseña de login.')
+      return
+    }
+
+    if (!registerVaultPassword.trim()) {
+      setStatus('Ingresá una master password.')
+      return
+    }
+
     if (registerPassword !== registerPasswordConfirm) {
       setStatus('La confirmación de la contraseña de login no coincide.')
       return
@@ -320,25 +340,39 @@ export default function App() {
       return
     }
 
-    setStatus('Creando usuario...')
-
-    const result = await window.api.createUser(
-      registerUsername.trim(),
-      registerPassword,
-      registerVaultPassword,
-    )
-
-    if (!result.ok) {
-      setStatus(result.error ?? 'No se pudo crear el usuario.')
+    if (!registrationWarningShown) {
+      setRegistrationWarningShown(true)
+      setStatus('Leé el aviso y volvé a presionar «Crear usuario» para confirmar.')
       return
     }
 
-    setRegisterUsername('')
-    setRegisterPassword('')
-    setRegisterPasswordConfirm('')
-    setRegisterVaultPassword('')
-    setRegisterVaultPasswordConfirm('')
-    setStatus('Usuario creado correctamente. Ahora podés iniciar sesión.')
+    setCreatingUser(true)
+    setStatus('Creando usuario...')
+
+    try {
+      const result = await window.api.createUser(
+        registerUsername.trim(),
+        registerPassword,
+        registerVaultPassword,
+      )
+
+      if (!result.ok) {
+        setStatus(result.error ?? 'No se pudo crear el usuario.')
+        return
+      }
+
+      setRegistrationWarningShown(false)
+      setRegisterUsername('')
+      setRegisterPassword('')
+      setRegisterPasswordConfirm('')
+      setRegisterVaultPassword('')
+      setRegisterVaultPasswordConfirm('')
+      setStatus('Usuario creado correctamente. Ahora podés iniciar sesión.')
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : 'No se pudo crear el usuario.')
+    } finally {
+      setCreatingUser(false)
+    }
   }
 
   async function handleUnlockVault() {
@@ -354,6 +388,13 @@ export default function App() {
     setUnlockPassword('')
     setView('home')
     setStatus('Vault desbloqueado.')
+  }
+
+  function handleRegistrationChange() {
+    if (!registrationWarningShown) return
+
+    setRegistrationWarningShown(false)
+    setStatus('Se modificaron los datos. Revisalos antes de confirmar el registro.')
   }
 
   async function handleExportBackup(loginPassword: string, vaultPassword: string) {
@@ -1124,6 +1165,9 @@ export default function App() {
         setRegisterVaultPassword={setRegisterVaultPassword}
         registerVaultPasswordConfirm={registerVaultPasswordConfirm}
         setRegisterVaultPasswordConfirm={setRegisterVaultPasswordConfirm}
+        registrationWarningShown={registrationWarningShown}
+        creatingUser={creatingUser}
+        onRegistrationChange={handleRegistrationChange}
         status={status}
         onLogin={handleLogin}
         onCreateUser={handleCreateUser}
