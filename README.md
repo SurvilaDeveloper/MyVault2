@@ -1,270 +1,478 @@
 # MyVault2
 
-![Electron](https://img.shields.io/badge/Electron-App-blue)
-![React](https://img.shields.io/badge/React-Frontend-61dafb)
-![TypeScript](https://img.shields.io/badge/TypeScript-Code-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
+[Español](README_ES.md)
 
-**MyVault2** es un gestor **local, privado y seguro** de contraseñas y
-notas desarrollado con **Electron, React y TypeScript**.
+[![Release](https://img.shields.io/github/v/release/SurvilaDeveloper/MyVault2)](https://github.com/SurvilaDeveloper/MyVault2/releases)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Electron](https://img.shields.io/badge/Electron-Desktop-47848F)](https://www.electronjs.org/)
+[![React](https://img.shields.io/badge/React-18-61DAFB)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6)](https://www.typescriptlang.org/)
 
-La aplicación está diseñada para que el usuario mantenga el **control
-total de sus datos**, sin depender de servicios en la nube ni
-sincronización externa. Toda la información se guarda **cifrada
-localmente en el dispositivo**.
+**MyVault2** is a local-first desktop application for storing passwords and private notes on Windows.
 
-------------------------------------------------------------------------
+It is built with **Electron, React and TypeScript** and is designed around a simple principle: the user's vault stays on the local device instead of depending on a cloud backend.
 
-# Características
+The project includes encrypted local storage, user accounts, backup and recovery workflows, automated tests, linting, Windows packaging, installer/portable builds and published releases.
 
-- 🔐 Almacenamiento **cifrado local**
-- 👤 **Sistema de usuarios**
-- 🔑 Vault protegido con contraseña independiente
-- 📝 Gestor de **notas seguras**
-- ⏱ **Auto-bloqueo del vault tras 5 minutos de inactividad**
-- 📋 **Borrado automático del portapapeles** después de copiar contraseñas
-- 🌙 Interfaz moderna con **tema oscuro**
-- 💻 Aplicación de **escritorio**
-- 📂 Datos almacenados **solo en el dispositivo**
-- 💾 Copias de respaldo cifradas en una carpeta o pen drive
-- 👁 Apertura de respaldos externos en **modo de solo lectura**
-- ♻️ Restauración que conserva los datos locales y evita duplicados
-- 🚫 **Sin conexión obligatoria a internet**
+> MyVault2 is a personal software project and has not undergone an independent professional security audit. It should not be presented as a replacement for a professionally audited password manager.
 
-------------------------------------------------------------------------
+---
 
-# Tecnologías utilizadas
+## Portfolio highlights
 
--   Electron
--   React
--   TypeScript
--   Vite
--   bcryptjs
+MyVault2 demonstrates work across several areas of desktop application development:
 
-Arquitectura simplificada:
+- Electron main / preload / renderer architecture
+- React + TypeScript user interface
+- encrypted local persistence
+- authentication and password hashing
+- AES-256-GCM encryption
+- key derivation with scrypt
+- controlled IPC through `contextBridge`
+- backup and recovery design
+- integrity checks with SHA-256
+- idempotent backup merge logic
+- automated tests
+- ESLint-based static checks
+- Windows packaging with electron-builder
+- NSIS installer and portable executable
+- GitHub Releases distribution
 
-    Electron (Main Process)
-            │
-            │ IPC
-            ▼
-    Preload (contextBridge)
-            │
-            ▼
-    React Renderer
+---
 
-La aplicación utiliza:
+## Features
 
--   `contextIsolation`
--   `sandbox`
--   `nodeIntegration: false`
+### Password vault
 
-para mejorar la seguridad.
+- Store account names, usernames and passwords
+- Add, edit and delete entries
+- Show or hide individual passwords
+- Copy secrets to the clipboard
+- Automatic secret removal from the clipboard after 30 seconds
+- Encrypted local persistence
 
-------------------------------------------------------------------------
+### Secure notes
 
-# Seguridad
+- Create, edit and delete private notes
+- Search notes by title
+- Detect unsaved changes
+- Prompt before navigating away from unsaved notes
+- Automatic save before inactivity logout when needed
+- Encrypted local persistence
 
-MyVault2 fue desarrollado siguiendo buenas prácticas de seguridad:
+### User accounts
 
-- cifrado del vault protegido por contraseña
-- auto-bloqueo automático de la sesión tras 5 minutos de inactividad
-- borrado automático del portapapeles después de copiar contraseñas
-- aislamiento de contexto en Electron
-- bloqueo de navegación externa dentro de la aplicación
-- apertura de enlaces externos mediante el navegador del sistema
-- sandbox habilitado
-- comunicación controlada mediante IPC
+- Multiple local users
+- Separate login password and master password
+- Change login password
+- Change master password
+- Delete local user and associated encrypted data
+- Automatic logout after 5 minutes of inactivity
 
-Los datos se almacenan localmente en:
+### Backup and recovery
 
-    AppData/Roaming/MyVault2
+- Export an encrypted recovery folder
+- Open external backups in read-only mode
+- Inspect password and note contents before restoring
+- Restore into an existing local user
+- Preserve existing local records
+- Skip duplicate entries during repeated restores
+- Validate backup file size and SHA-256 checksum
+- Reject unsafe or malformed backup paths/files
 
-Cada usuario posee sus propios archivos cifrados:
+---
 
-    username.vault
-    username.notes.vault
+## Security-oriented design
 
-Los respaldos externos incluyen ambos archivos y un manifiesto `recovery.json`
-con la versión del formato y checksums SHA-256. El manifiesto no contiene
-contraseñas ni secretos.
+MyVault2 includes several security-focused implementation choices.
 
-------------------------------------------------------------------------
+### Vault encryption
 
-# Respaldo y recuperación
+Password and note vaults are encrypted using:
 
-Desde el panel principal se puede elegir **Guardar copia en...** para crear una
-carpeta de recuperación en un pen drive u otra ubicación. MyVault2 solicita
-nuevamente la contraseña de login y la master password antes de exportar.
+```text
+AES-256-GCM
+```
 
-Para recuperar los datos en otra computadora o combinar un respaldo con los
-datos que ya están en este equipo:
+A new random salt and IV are generated for each encryption operation.
 
-1. Instalar o ejecutar la versión portable de MyVault2.
-2. Crear un usuario nuevo o iniciar sesión en uno existente.
-3. Elegir **Abrir respaldo...** y seleccionar la carpeta que contiene
-   `recovery.json`.
-4. Introducir la master password del respaldo.
-5. Revisar las contraseñas y anotaciones en modo de solo lectura.
-6. Elegir **Restaurar en este equipo** para agregar los registros que falten.
+Encryption keys are derived from the master password using:
 
-Una contraseña se considera duplicada solo si **Cuenta**, **Usuario** y
-**Contraseña** son exactamente iguales. Una anotación se considera duplicada
-solo si coinciden exactamente **título** y **texto**. Si cualquiera de esos
-campos difiere, se conserva como un registro nuevo. Los datos locales existentes
-se mantienen y los registros agregados se cifran con la master password del
-usuario actual. Repetir la restauración no añade copias idénticas.
+```text
+scrypt
+```
 
-La carpeta externa nunca se modifica durante la apertura ni la restauración.
-La versión portable permite ejecutar el programa sin instalarlo, pero guarda
-los datos locales en el perfil de Windows de la computadora en uso. Para
-migrar, llevá también la carpeta de respaldo cifrada en el pen drive.
+The encrypted file stores:
 
-------------------------------------------------------------------------
+```text
+salt
+iv
+authentication tag
+ciphertext
+```
 
-# Instalación
+AES-GCM provides authenticated encryption, allowing modified or invalid encrypted data to be detected during decryption.
 
-## Descargar ejecutable
+### Authentication credentials
 
-Desde [Releases](https://github.com/SurvilaDeveloper/MyVault2/releases) del repositorio.
+Login passwords and master-password verification values are stored as hashes using:
 
-Instalador:
+```text
+bcrypt
+```
 
-    MyVault2-Setup-x.x.x.exe
+Plaintext login passwords are not persisted.
 
-Versión portable:
+### Electron isolation
 
-    MyVault2-Portable-x.x.x.exe
+The main browser window is configured with:
 
-------------------------------------------------------------------------
+```text
+contextIsolation: true
+nodeIntegration: false
+sandbox: true
+```
 
-# Ejecutables de Windows
+The renderer communicates with the Electron main process through a limited API exposed by the preload script with `contextBridge`.
 
-Los ejecutables no están firmados digitalmente y Windows puede mostrar una
-advertencia al abrirlos. Consultá el origen y las sumas SHA-256 publicadas en
-cada versión antes de ejecutarlos.
+Navigation is restricted, new windows are denied, and allowed external links are opened through the operating system browser.
 
-------------------------------------------------------------------------
+### Clipboard handling
 
-# Compilar desde el código fuente
+Passwords copied through the secret-copy action are automatically removed from the clipboard after:
 
-Requisitos:
+```text
+30 seconds
+```
 
--   Node.js 22.12 o superior
--   npm
+### Local-only architecture
 
-Clonar repositorio:
+The application does not require a remote backend for normal use.
 
-``` bash
+Application data is stored under the Windows user profile in the MyVault2 application data directory.
+
+---
+
+## Architecture
+
+```text
+┌──────────────────────────────┐
+│ React Renderer               │
+│                              │
+│ UI / Passwords / Notes       │
+└──────────────┬───────────────┘
+               │
+               │ limited API
+               ▼
+┌──────────────────────────────┐
+│ Electron Preload             │
+│ contextBridge + IPC          │
+└──────────────┬───────────────┘
+               │
+               ▼
+┌──────────────────────────────┐
+│ Electron Main Process        │
+│                              │
+│ Authentication               │
+│ Vault encryption             │
+│ Notes encryption             │
+│ Backup / recovery            │
+│ Clipboard handling           │
+│ File-system access           │
+└──────────────┬───────────────┘
+               │
+               ▼
+┌──────────────────────────────┐
+│ Local encrypted files        │
+└──────────────────────────────┘
+```
+
+---
+
+## Main technologies
+
+### Application
+
+- Electron 44
+- React 18
+- TypeScript 5
+- Vite 8
+- bcryptjs
+- Lucide React
+
+### Tooling
+
+- Node.js 22+
+- ESLint
+- Node test runner
+- electron-builder
+
+### Windows distribution
+
+- NSIS installer
+- Portable `.exe`
+- SHA-256 release checksums
+
+---
+
+## Local data
+
+Each user has separate encrypted password and note files.
+
+Conceptually:
+
+```text
+MyVault2/
+├── auth.json
+├── vaults/
+│   ├── username.vault
+│   └── username.notes.vault
+└── session/
+```
+
+`auth.json` contains password hashes, not plaintext passwords.
+
+Vault and note contents are stored encrypted.
+
+---
+
+## Backup format
+
+A backup contains encrypted password and note files plus a recovery manifest:
+
+```text
+MyVault2-Backup-<timestamp>/
+├── recovery.json
+├── <encrypted password vault>
+└── <encrypted notes vault>
+```
+
+The recovery manifest records metadata such as:
+
+- recovery format
+- format version
+- creation time
+- application version
+- username
+- file sizes
+- SHA-256 checksums
+
+Before opening a recovery file, MyVault2 validates its manifest, size and checksum.
+
+External backups are opened in **read-only mode** until the user explicitly chooses to restore them.
+
+---
+
+## Recovery merge behavior
+
+Restoration is designed to preserve existing local data.
+
+For passwords, a record is considered duplicated only when these values match:
+
+```text
+account + username + password
+```
+
+For notes, a record is considered duplicated when these values match:
+
+```text
+title + content
+```
+
+Repeatedly restoring the same backup therefore does not keep adding identical copies.
+
+This merge behavior has automated tests under:
+
+```text
+tests/backupMerge.test.ts
+```
+
+---
+
+## Automated checks
+
+The project currently provides:
+
+```bash
+npm test
+npm run lint
+npm run build
+```
+
+The test suite includes coverage for backup merge behavior and username validation.
+
+---
+
+## Windows builds and releases
+
+Windows builds are generated locally with `electron-builder`.
+
+The project can produce:
+
+```text
+MyVault2-Setup-<version>.exe
+MyVault2-Portable-<version>.exe
+```
+
+The current public release was built, tested and published manually through GitHub Releases.
+
+Before publishing a release, the application can be checked locally with:
+
+```bash
+npm test
+npm run lint
+npm run build
+npm run dist
+```
+
+SHA-256 checksums can be generated for the final executables and published alongside the release artifacts.
+
+---
+
+## Download
+
+The current Windows release is available from:
+
+[GitHub Releases](https://github.com/SurvilaDeveloper/MyVault2/releases)
+
+Release artifacts include:
+
+```text
+MyVault2-Setup-<version>.exe
+MyVault2-Portable-<version>.exe
+```
+
+### Windows warning
+
+The executables are not digitally code-signed.
+
+Windows Defender / SmartScreen may therefore show an unknown-publisher warning even when the executable was downloaded from this repository.
+
+When using a release, verify that it comes from the official repository and compare its SHA-256 checksum when provided.
+
+---
+
+## Running from source
+
+### Requirements
+
+- Node.js 22.12 or newer
+- npm
+
+Clone the repository:
+
+```bash
 git clone https://github.com/SurvilaDeveloper/MyVault2.git
 cd MyVault2
 ```
 
-Instalar dependencias:
+Install dependencies:
 
-``` bash
+```bash
 npm ci
 ```
 
-Modo desarrollo:
+Run in development mode:
 
-``` bash
+```bash
 npm run dev
 ```
 
-Construir aplicación:
+Run tests:
 
-``` bash
+```bash
+npm test
+```
+
+Run lint:
+
+```bash
+npm run lint
+```
+
+Build:
+
+```bash
 npm run build
 ```
 
-Generar instalador y versión portable en Windows:
+Generate Windows installer and portable application:
 
-``` bash
+```bash
 npm run dist
 ```
 
-Los binarios se generarán en:
+---
 
-    /dist
+## Project structure
 
-También podés ejecutar manualmente **Compilar MyVault2 para Windows** desde la
-pestaña **Actions**. Al finalizar, descargá el archivo generado en la sección
-**Artifacts** de esa ejecución, extraé los dos `.exe`, probalos en Windows y
-adjuntalos junto con `SHA256SUMS.txt` y `LICENSE` a una nueva versión en
-**Releases**.
+Main source areas:
 
-------------------------------------------------------------------------
+```text
+MyVault2/
+├── electron/
+│   ├── auth.ts
+│   ├── backup.ts
+│   ├── backupMerge.ts
+│   ├── main.ts
+│   ├── notesVault.ts
+│   ├── preload.ts
+│   ├── username.ts
+│   └── vault.ts
+│
+├── src/
+│   ├── App.tsx
+│   ├── components/
+│   ├── styles/
+│   └── types/
+│
+├── tests/
+│   ├── backupMerge.test.ts
+│   └── username.test.ts
+│
+└── package.json
+```
 
-# Estructura del proyecto
+---
 
-    electron/
-     ├ main.ts
-     ├ backup.ts
-     ├ preload.ts
+## Current release
 
-    src/
-     ├ App.tsx
-     ├ components/
-     │  └ RecoveryPanel.tsx
+Latest documented release:
 
-    public/
-     ├ myvault.png
+```text
+v1.2.0
+```
 
-    dist-electron/
-    dist-renderer/
+It includes Windows installer and portable executables.
 
-------------------------------------------------------------------------
+---
 
-# Roadmap
+## Roadmap
 
-Funciones planificadas:
+Possible future improvements:
 
--   generador de contraseñas seguras
--   mejoras de interfaz
--   soporte multiplataforma (Linux y macOS)
+- Add application screenshots to the repository
+- Expand automated test coverage
+- Add more recovery and corruption tests
+- Add a password generator
+- Improve accessibility and UX
+- Explore Linux and macOS packaging
+- Add optional code signing for Windows releases
+- Continue reviewing the security model and IPC surface
 
-------------------------------------------------------------------------
+---
 
-# Licencia
+## License
 
-MyVault2 se distribuye bajo la [licencia MIT](LICENSE). Copyright © 2026
-Gabriel Survila.
+MyVault2 is distributed under the [MIT License](LICENSE).
 
-------------------------------------------------------------------------
+Copyright © 2026 Gabriel Survila.
 
-# Autor
+---
+
+## Author
 
 **Gabriel Survila**
 
-Email:
-
-surviladeveloper@gmail.com
-
-Repositorio:
-
-https://github.com/SurvilaDeveloper/MyVault2
-
-------------------------------------------------------------------------
-
-# Filosofía del proyecto
-
-MyVault2 sigue un principio simple:
-
-> Tus contraseñas deben estar bajo tu control, no en un servidor
-> externo.
-
-La aplicación funciona completamente **offline** y los datos permanecen
-**únicamente en el dispositivo del usuario**.
-
-------------------------------------------------------------------------
-
-# Contribuciones
-
-Las contribuciones son bienvenidas.
-
-Puedes colaborar con:
-
--   mejoras de seguridad
--   mejoras de interfaz
--   auditorías de código
--   nuevas funcionalidades
+- GitHub: [SurvilaDeveloper](https://github.com/SurvilaDeveloper)
+- Email: surviladeveloper@gmail.com
